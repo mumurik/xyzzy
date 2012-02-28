@@ -593,6 +593,8 @@ init_symbol_value_once ()
   xsymbol_value (Vunicode_to_half_width) = Qt;
   xsymbol_value (Vcolor_page_enable_dir_p) = Qnil;
   xsymbol_value (Vcolor_page_enable_subdir_p) = Qnil;
+
+  xsymbol_value (Vwow64_enable_file_system_redirector) = Qt;
 }
 
 static void

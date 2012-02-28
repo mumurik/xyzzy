@@ -2590,6 +2590,7 @@ static symbols ed[] =
   DEFVAR2 (*restore-window-size*),
   DEFVAR2 (*restore-window-position*),
   DEFVAR2 (*buffer-list-sort-ignore-case*),
+  DEFVAR2 (*wow64-enable-file-system-redirector*),
 };
 
 static void
