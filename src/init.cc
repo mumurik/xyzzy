@@ -715,12 +715,13 @@ init_lisp_objects ()
 }
 
 static int
-init_editor_objects (ApplicationFrame* app1)
+init_editor_objects (ApplicationFrame* app1, BOOL first)
 {
   try
     {
       Window::create_default_windows (app1);
-      create_default_buffers ();
+      if (first)
+        create_default_buffers ();
     }
   catch (nonlocal_jump &)
     {
@@ -1013,7 +1014,7 @@ init_root_app (HINSTANCE hinst, int passed_cmdshow, int &ole_initialized)
 
   active_app_frame().modeline_param.init (HFONT (SendMessage (active_app_frame().hwnd_sw, WM_GETFONT, 0, 0)));
 
-  if (!init_editor_objects (&active_app_frame()))
+  if (!init_editor_objects (&active_app_frame(), TRUE))
     return 0;
 
   try {Dde::initialize ();} catch (Dde::Exception &) {}
@@ -1068,7 +1069,7 @@ init_app(HINSTANCE hinst, ApplicationFrame* app1, ApplicationFrame* parent)
 
   app1->modeline_param.init (HFONT (SendMessage (app1->hwnd_sw, WM_GETFONT, 0, 0)));
 
-  if (!init_editor_objects (app1))
+  if (!init_editor_objects (app1, FALSE))
     return 0;
 
   call_startup(app1, parent);
