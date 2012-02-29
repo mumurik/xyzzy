@@ -157,7 +157,7 @@
 
 (defun previous-pseudo-frame ()
   (interactive)
-  (let ((appframe (selected-frame))
+  (let* ((appframe (selected-frame))
 	(frame (let ((n (position (pseudo-frame-name (get-current-pseudo-frame appframe))
 				  (get-pseudo-frame-list appframe)
 				  :key #'pseudo-frame-name :test #'string=)))
