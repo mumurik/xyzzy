@@ -235,7 +235,7 @@ distclean: clean
 	  xdde.obj xyzzycli.obj xyzzycli.exe xyzzyenv.obj xyzzyenv.exe \
 	  xyzzycli.res xyzzyenv.res libxpi.lib xpi.obj \
 	  vc40.idb vc40.pdb *.aps XTAGS #* *~ \
-	  $(PRIVCTRLDIR)/#* $(PRIVCTRLDIR)/*~
+	  $(PRIVCTRLDIR:/=\)\#* $(PRIVCTRLDIR:/=\)\*~
 
 realclean: distclean
 	del /F jisx0212-width.h lucida-width.h ucs2tab.h fontrange.h

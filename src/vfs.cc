@@ -18,11 +18,21 @@ protected:
   static BOOL b_wow64;
 
 public:
+  struct WoW64SpecialRedirectionPath
+  {
+    const char* name;
+    const char* expStr;
+    char path[MAX_PATH+1];
+    WIN32_FIND_DATA fd;
+  };
+
   static BOOL WINAPI IsWow64Process (HANDLE hProcess, PBOOL Wow64Process);
   static BOOL WINAPI Wow64DisableWow64FsRedirection (PVOID *OldValue);
   static BOOL WINAPI Wow64RevertWow64FsRedirection (PVOID *OldValue);
   static BOOL IsWow64 ();
+  static const WoW64SpecialRedirectionPath* GetSpecialRedirectionPathArray ();
   static BOOL IsSpecialRedirectionPath (const char *path, WIN32_FIND_DATA &fd);
+  static BOOL IsSpecialRedirectionFilename (const char *path);
   static file_path_mode GetFilePathMode ();
 };
 
@@ -106,53 +116,71 @@ WINWOW64::GetFilePathMode ()
   return m;
 }
 
+const WINWOW64::WoW64SpecialRedirectionPath*
+WINWOW64::GetSpecialRedirectionPathArray ()
+{
+  // See : http://msdn.microsoft.com/en-us/library/aa384187(v=vs.85).aspx
+  static WoW64SpecialRedirectionPath srp[] =
+  {
+    { "Sysnative", "%windir%\\Sysnative" },
+    { "catroot", "%windir%\\System32\\catroot" },
+    { "catroot2", "%windir%\\System32\\catroot2" },
+    { "driverstore", "%windir%\\System32\\driverstore" },
+    { "etc", "%windir%\\System32\\drivers\\etc" },
+    { "logfiles", "%windir%\\System32\\logfiles" },
+    { "spool", "%windir%\\System32\\spool" },
+    { NULL, NULL }
+  };
+  if(srp[0].path[0] == 0)
+    {
+      PVOID OldValue;
+      WINWOW64::Wow64DisableWow64FsRedirection (&OldValue);
+      WIN32_FIND_DATA tfd = { 0 };
+      {
+        char path[MAX_PATH+1];
+        ExpandEnvironmentStrings ("%windir%\\System32", path, _countof (path));
+        HANDLE h = FindFirstFile (path, &tfd);
+        FindClose (h);
+      }
+
+      for(int i = 0; srp[i].name; i++)
+        {
+          WoW64SpecialRedirectionPath &s = srp[i];
+          ExpandEnvironmentStrings (s.expStr, s.path, _countof (s.path));
+          s.fd = tfd;
+          strcpy (s.fd.cFileName, s.name);
+        }
+      WINWOW64::Wow64RevertWow64FsRedirection (&OldValue);
+    }
+
+  return srp;
+}
+
+BOOL
+WINWOW64::IsSpecialRedirectionFilename (const char* filename)
+{
+  BOOL ret = FALSE;
+  char fname[MAX_PATH+1];
+  strcpy (fname, filename);
+  convert_backsl_with_sl (fname, '/', '\\');
+  const WINWOW64::WoW64SpecialRedirectionPath* srp = WINWOW64::GetSpecialRedirectionPathArray ();
+  for (int i = 0; srp[i].name; i++)
+    {
+      if (_memicmp (fname, srp[i].path, strlen (srp[i].path)) == 0)
+        {
+          ret = TRUE;
+          break;
+        }
+    }
+  return ret;
+}
+
 BOOL
 WINWOW64::IsSpecialRedirectionPath (const char *path, WIN32_FIND_DATA &fd)
 {
   BOOL r = FALSE;
   if (WINWOW64::IsWow64 ())
     {
-      struct WoW64SpecialRedirectionPath
-      {
-        const char* name;
-        const char* expStr;
-        char path[MAX_PATH+1];
-        WIN32_FIND_DATA fd;
-      };
-      // See : http://msdn.microsoft.com/en-us/library/aa384187(v=vs.85).aspx
-      static WoW64SpecialRedirectionPath srp[] =
-      {
-        { "Sysnative", "%windir%\\Sysnative" },
-        { "catroot", "%windir%\\System32\\catroot" },
-        { "catroot2", "%windir%\\System32\\catroot2" },
-        { "driverstore", "%windir%\\System32\\driverstore" },
-        { "etc", "%windir%\\System32\\drivers\\etc" },
-        { "logfiles", "%windir%\\System32\\logfiles" },
-        { "spool", "%windir%\\System32\\spool" },
-      };
-
-      if(srp[0].path[0] == 0)
-        {
-          PVOID OldValue;
-          WINWOW64::Wow64DisableWow64FsRedirection (&OldValue);
-          WIN32_FIND_DATA tfd = { 0 };
-          {
-            char path[MAX_PATH+1];
-            ExpandEnvironmentStrings ("%windir%\\System32", path, _countof (path));
-            HANDLE h = FindFirstFile (path, &tfd);
-            FindClose (h);
-          }
-
-          for(int i = 0; i < _countof (srp); i++)
-            {
-              WoW64SpecialRedirectionPath &s = srp[i];
-              ExpandEnvironmentStrings (s.expStr, s.path, _countof (s.path));
-              s.fd = tfd;
-              strcpy (s.fd.cFileName, s.name);
-            }
-          WINWOW64::Wow64RevertWow64FsRedirection (&OldValue);
-        }
-
       char t[MAX_PATH+1];
       strcpy (t, path);
       for(char* p = t; *p != 0; p++)
@@ -163,7 +191,8 @@ WINWOW64::IsSpecialRedirectionPath (const char *path, WIN32_FIND_DATA &fd)
             }
         }
 
-      for(int i = 0; i < _countof(srp); i++)
+      const WoW64SpecialRedirectionPath* srp = GetSpecialRedirectionPathArray ();
+      for(int i = 0; srp[i].name; i++)
         {
           const WoW64SpecialRedirectionPath &s = srp[i];
           if(_stricmp (t, s.path) == 0)
@@ -200,6 +229,62 @@ Wow64FsRedirectionSelector::~Wow64FsRedirectionSelector ()
     {
       WINWOW64::Wow64RevertWow64FsRedirection (&OldValue);
     }
+}
+
+lisp
+Fsi_wow64_reinterpret_path (lisp string, lisp flag)
+{
+  assert (stringp (string));
+  lisp result = Qnil;
+  if (WINWOW64::IsWow64 ())
+    {
+      const char* replaceFromExp = NULL;
+      const char* replaceToExp = NULL;
+      bool isNativePath = (flag == Qnil);
+
+      char srcPath[MAX_PATH+1];
+      w2s (srcPath, xstring_contents (string), xstring_length (string));
+
+      if (isNativePath && WINWOW64::GetFilePathMode () == WINWOW64::wow64)
+        {
+		  if (! WINWOW64::IsSpecialRedirectionFilename (srcPath))
+            {
+              replaceFromExp = "%windir%\\System32";
+              replaceToExp = "%windir%\\Sysnative";
+            }
+        }
+      else if (!isNativePath && WINWOW64::GetFilePathMode () == WINWOW64::native)
+        {
+		  if (! WINWOW64::IsSpecialRedirectionFilename (srcPath))
+            {
+              replaceFromExp = "%windir%\\System32";
+              replaceToExp = "%windir%\\SysWOW64";
+            }
+        }
+
+      if (replaceFromExp && replaceToExp)
+        {
+          char replaceFrom[MAX_PATH+1];
+          ExpandEnvironmentStrings (replaceFromExp, replaceFrom, _countof (replaceFrom));
+          size_t replaceFromLen = strlen (replaceFrom);
+          char sPath[MAX_PATH+1];
+		  strcpy (sPath, srcPath);
+          convert_backsl_with_sl (sPath, '/', '\\');
+		  if (_memicmp (sPath, replaceFrom, replaceFromLen) == 0)
+            {
+              char replaceTo[MAX_PATH+1];
+              ExpandEnvironmentStrings (replaceToExp, replaceTo, _countof (replaceTo));
+              char replaceResult[MAX_PATH+1];
+              sprintf (replaceResult, "%s%s", replaceTo, &srcPath[replaceFromLen]);
+              result = make_string (replaceResult);
+            }
+        }
+    }
+  if (result == Qnil)
+    {
+      result = copy_string(string);
+    }
+  return result;
 }
 
 class NetPassDlg

@@ -5,6 +5,7 @@
 #include <eh.h>
 #include <fcntl.h>
 #include <objbase.h>
+#include <tlhelp32.h>
 #include "ctl3d.h"
 #include "environ.h"
 #include "except.h"
@@ -633,12 +634,56 @@ init_symbol_value ()
   xsymbol_value (Vlast_match_string) = Qnil;
 }
 
+static bool is_parent_process_wow64()
+{
+  bool ret = false;
+  typedef BOOL (WINAPI *ISWOW64PROCESS)(HANDLE, PBOOL);
+  static const ISWOW64PROCESS fnIsWow64Process = (ISWOW64PROCESS)GetProcAddress (GetModuleHandle ("KERNEL32"), "IsWow64Process");
+  HANDLE h = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
+  PROCESSENTRY32 pe = { 0 };
+  pe.dwSize = sizeof (PROCESSENTRY32);
+  int pid = GetCurrentProcessId ();
+  if (Process32First (h, &pe))
+    {
+      do
+        {
+          if (pe.th32ProcessID == pid)
+            {
+              HANDLE processHandle = OpenProcess (PROCESS_QUERY_INFORMATION, 0, pe.th32ParentProcessID);
+              BOOL b = FALSE;
+              if (fnIsWow64Process && fnIsWow64Process (processHandle, &b))
+                {
+                  ret = (b != 0);
+                  break;
+                }
+            }
+        } while (Process32Next (h, &pe));
+    }
+  return ret;
+}
+
 static void
 init_command_line (int ac)
 {
   lisp p = Qnil;
   for (int i = __argc - 1; i >= ac; i--)
     p = xcons (make_string (__argv[i]), p);
+  {
+    bool haveWow64Option = false;
+    for (int i = __argc - 1; i >= ac; i--)
+      {
+        if (_stricmp (__argv[i], "-wow64-redirection") == 0 || _stricmp (__argv[i], "-no-wow64-redirection") == 0)
+          {
+            haveWow64Option = true;
+            break;
+          }
+      }
+    if (! haveWow64Option)
+      {
+        const char *wow64_mode = is_parent_process_wow64 () ? "-wow64-redirection" : "-no-wow64-redirection";
+        p = xcons (make_string (wow64_mode), p);
+      }
+  }
   xsymbol_value (Vsi_command_line_args) = p;
 }
 

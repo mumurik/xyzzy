@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <malloc.h>
+#include <tlhelp32.h>
 #include "xyzzycli.h"
 #include "listen.h"
 
@@ -520,6 +521,109 @@ read_config (config &cf)
                            cf.post_opt, sizeof cf.post_opt, path);
 }
 
+class Wow64
+{
+public:
+  Wow64 ()
+    {
+      fnIsWow64Process = (ISWOW64PROCESS)GetProcAddress (GetModuleHandle ("KERNEL32"), "IsWow64Process");
+    }
+
+  ~Wow64 ()
+    {
+    }
+
+  BOOL IsWow64Process (HANDLE hProcess, PBOOL Wow64Process)
+    {
+      BOOL r = FALSE;
+      if (Wow64Process) {
+        *Wow64Process = FALSE;
+      }
+      if (fnIsWow64Process) {
+        r = fnIsWow64Process (hProcess, Wow64Process);
+      }
+      return r;
+    }
+
+  BOOL IsWow64 ()
+    {
+      BOOL b = FALSE;
+      IsWow64Process (GetCurrentProcess (), &b);
+      return b;
+    }
+
+  BOOL IsParentProcessWow64 ()
+    {
+      BOOL ret = FALSE;
+      if (IsWow64 ())
+        {
+          HANDLE h = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
+          PROCESSENTRY32 pe = { 0 };
+          pe.dwSize = sizeof (PROCESSENTRY32);
+          int pid = GetCurrentProcessId ();
+          if (Process32First (h, &pe))
+            {
+              do
+                {
+                  if (pe.th32ProcessID == pid)
+                    {
+                      HANDLE processHandle = OpenProcess (PROCESS_QUERY_INFORMATION, 0, pe.th32ParentProcessID);
+                      IsWow64Process (processHandle, &ret);
+                      break;
+                    }
+                } while( Process32Next (h, &pe));
+            }
+        }
+      return ret;
+    }
+
+  void cmdlineFixup (int &ac, char **&av, const char *const cl, int nchars, const config &cf)
+    {
+      bool haveWow64Option = false;
+      int lastSpecialOption = 0;
+      for (int i = 1; i < ac; ++i)
+	    {
+          const char* o = av[i];
+          if (lstrcmp (o, "-image") == 0 || lstrcmp (o, "-config") == 0 || lstrcmp (o, "-ini") == 0)
+	        {
+              lastSpecialOption = i + 1;
+            }
+	      else if (lstrcmp (o, "-q") == 0 || lstrcmp (o, "-no-init-file") == 0)
+	        {
+              lastSpecialOption = i;
+            }
+	      else if (lstrcmp (o, "-no-wow64-redirection") == 0 || lstrcmp (o, "-wow64-redirection") == 0)
+	        {
+              haveWow64Option = true;
+            }
+        }
+
+      if (! haveWow64Option)
+	    {
+          ac += 1;
+          int ac2;
+          av = (char **)_alloca (sizeof *av * (ac + 1) + nchars);
+          parse_cmdline (cl, (char *)(av + ac + 1), ac2, av, cf);
+          for (int i = ac-1; i > lastSpecialOption+1; --i)
+	        {
+              av[i] = av[i-1];
+            }
+          if (IsParentProcessWow64 ())
+	        {
+              av[lastSpecialOption+1] = "-wow64-redirection";
+            }
+	      else
+	        {
+              av[lastSpecialOption+1] = "-no-wow64-redirection";
+            }
+        }
+    }
+
+protected:
+  typedef BOOL (WINAPI *ISWOW64PROCESS)(HANDLE, PBOOL);
+  ISWOW64PROCESS fnIsWow64Process;
+};
+
 extern "C" void __cdecl
 process_startup ()
 {
@@ -531,5 +635,12 @@ process_startup ()
   int nchars = parse_cmdline (cl, 0, ac, 0, cf);
   char **av = (char **)_alloca (sizeof *av * (ac + 1) + nchars);
   parse_cmdline (cl, (char *)(av + ac + 1), ac, av, cf);
+
+  Wow64 wow;
+  if (wow.IsWow64())
+    {
+      wow.cmdlineFixup(ac, av, cl, nchars, cf);
+	}
+
   ExitProcess (xmain (ac, av, cf.xyzzy, cf.multi_instance));
 }

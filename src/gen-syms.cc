@@ -1008,6 +1008,9 @@ static symbols sys[] =
 
   SI_DEFUN3 (inflate-stream, 1, 1, 0),
   //SI_DEFUN3 (deflate-stream, 1, 2, 0),
+
+  /* vfs.cc */
+  SI_DEFUN3 (wow64-reinterpret-path, 2, 0, 0),
 };
 
 static symbols kwd[] =
