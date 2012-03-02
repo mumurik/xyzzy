@@ -588,6 +588,32 @@ process_mouse_activate (ApplicationFrame *app1, LPARAM lparam)
   return r;
 }
 
+static int
+process_mouse_activate_client (ApplicationFrame *app1, LPARAM lparam)
+{
+  int r;
+  if (g_app.toplevel_is_active
+      || xsymbol_value (Veat_mouse_activate) == Qnil)
+    r = MA_ACTIVATE;
+  else
+    switch (LOWORD (lparam))
+      {
+      case HTCLIENT:
+      case HTHSCROLL:
+      case HTVSCROLL:
+        r = MA_ACTIVATEANDEAT;
+        break;
+
+      default:
+        r = MA_ACTIVATE;
+        break;
+      }
+  if (GetFocus () != app1->toplev)
+    SetFocus (app1->toplev);
+
+  return r;
+}
+
 LRESULT CALLBACK 
 toplevel_wnd_create(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -1422,7 +1448,7 @@ client_wndproc (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
       break;
 
     case WM_MOUSEACTIVATE:
-      return process_mouse_activate (get_app_frame_from_window(hwnd), lparam);
+      return process_mouse_activate_client (get_app_frame_from_window(hwnd), lparam);
 
     case WM_SETFOCUS:
       SetFocus (get_app_frame_from_window(hwnd)->toplev);
