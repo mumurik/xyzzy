@@ -1474,8 +1474,8 @@ tab_bar::wndproc (UINT msg, WPARAM wparam, LPARAM lparam)
           return 0;
         HWND hwnd_focus = GetFocus ();
         dock_bar::wndproc (msg, wparam, lparam);
-        move_tab ((short)LOWORD (lparam), (short)HIWORD (lparam));
-        if (hwnd_focus)
+        if (move_tab ((short)LOWORD (lparam), (short)HIWORD (lparam))
+            && hwnd_focus)
           SetFocus (hwnd_focus);
         return 0;
       }
