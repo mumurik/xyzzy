@@ -216,7 +216,6 @@ clean:
 	  $(OUTDIR)\$(BUILD:.exe=.ilk)
 	del /F gen-syms.obj gen-syms.exe gen-ctab.obj gen-ctab.exe
 	del /F gen-ktab.obj gen-ktab.exe gen-msg.obj gen-msg.exe
-	del /F gen-vinf.obj gen-vinf.exe verinfo.h
 	del /F gen-ucs2tab.obj gen-ucs2tab.exe
 	del /F gen-utf2sjis.obj gen-utf2sjis.exe
 	del /F gen-char-width.obj gen-char-width.exe
@@ -276,9 +275,9 @@ TMPFILE=tmpfile.$$$$
 $(OUTDIR)/xyzzy.res: $(OUTDIR)/xyzzy.rc
 	rc -r -fo$@ $(RCFLAGS) $(OUTDIR)/xyzzy.rc
 
-$(OUTDIR)\xyzzy.rc: xyzzy.rc verinfo.h
+$(OUTDIR)\xyzzy.rc: xyzzy.rc version.h version-rc.h
 	type xyzzy.rc > $@
-	type verinfo.h >> $@
+	type version-rc.h >> $@
 
 vars-decl.h: gen-syms.exe
 	-@if exist $@ del $@ > nul
@@ -318,11 +317,6 @@ msgdef.cc: gen-msg.exe
 kanjitab.h: gen-ktab.exe
 	-@if exist $@ del $@ > nul
 	.\gen-ktab > $(TMPFILE)
-	move $(TMPFILE) $@ > nul
-
-verinfo.h: gen-vinf.exe
-	-@if exist $@ del $@ > nul
-	.\gen-vinf > $(TMPFILE)
 	move $(TMPFILE) $@ > nul
 
 ucs2tab.h: gen-ucs2tab.cc
@@ -385,9 +379,6 @@ gen-msg.exe: gen-msg.cc chtab.cc chtype.h msgdef.h
 
 gen-ktab.exe: gen-ktab.cc
 	$(CXX) -Fe$@ -Tpgen-ktab.cc
-
-gen-vinf.exe: gen-vinf.cc version.h
-	$(CXX) -Fe$@ -Tpgen-vinf.cc
 
 gen-ucs2tab.exe: gen-ucs2tab.cc charset.h fontrange.h
 	$(CXX) -Fe$@ -Tpgen-ucs2tab.cc

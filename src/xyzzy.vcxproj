@@ -361,8 +361,8 @@
     <ClInclude Include="utimer.h" />
     <ClInclude Include="vars-decl.h" />
     <ClInclude Include="vector.h" />
-    <ClInclude Include="verinfo.h" />
     <ClInclude Include="version.h" />
+    <ClInclude Include="version-rc.h" />
     <ClInclude Include="vfs.h" />
     <ClInclude Include="vwin32.h" />
     <ClInclude Include="waitobj.h" />

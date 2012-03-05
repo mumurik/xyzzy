@@ -735,10 +735,10 @@
     <ClInclude Include="vector.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="verinfo.h">
+    <ClInclude Include="version.h">
       <Filter>header</Filter>
     </ClInclude>
-    <ClInclude Include="version.h">
+    <ClInclude Include="version-rc.h">
       <Filter>header</Filter>
     </ClInclude>
     <ClInclude Include="vfs.h">
