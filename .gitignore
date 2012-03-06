@@ -19,7 +19,7 @@ src/Debug/xyzzy_mak.log
 src/Release/xyzzy_mak.log
 src/xyzzy.vcxproj.user
 src/xyzzy_mak.vcxproj.user
-gen_syms/gen_syms.vcxproj.user
+src/gen_syms.vcxproj.user
 xyzzy.opensdf
 xyzzy.sdf
 src/char-width.h

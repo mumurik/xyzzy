@@ -4,7 +4,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xyzzy_mak", "src\xyzzy_mak.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xyzzy", "src\xyzzy.vcxproj", "{8E447303-073A-4162-A6BE-844804A90DD1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gen_syms", "gen_syms\gen_syms.vcxproj", "{CF3A9627-51CE-45C6-A8CE-9A90D2764282}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gen_syms", "src\gen_syms.vcxproj", "{CF3A9627-51CE-45C6-A8CE-9A90D2764282}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -57,13 +57,13 @@
     </Link>
     <PostBuildEvent>
       <Command>$(OutDir)gen_syms.exe -vars &gt; temp.txt
-move temp.txt ..\src\vars-decl.h
+move temp.txt vars-decl.h
 $(OutDir)gen_syms.exe -proto &gt; temp.txt
-move temp.txt ..\src\fns-decl.h
+move temp.txt fns-decl.h
 $(OutDir)gen_syms.exe -symtable &gt; temp.txt
-move temp.txt ..\src\symtable.cc
+move temp.txt symtable.cc
 $(OutDir)gen_syms.exe -version &gt; temp.txt
-move temp.txt ..\src\dumpver.cc
+move temp.txt dumpver.cc
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -85,11 +85,11 @@ move temp.txt ..\src\dumpver.cc
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\gen-syms.cc" />
+    <ClCompile Include="gen-syms.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\function.h" />
-    <ClInclude Include="..\src\symbol.h" />
+    <ClInclude Include="function.h" />
+    <ClInclude Include="symbol.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
