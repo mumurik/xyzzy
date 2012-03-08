@@ -66,6 +66,12 @@ public:
       ENCODE_RAW,     // text(s––•ÏŠ·‚µ‚È‚¢)
       ENCODE_BINARY   // binary
     };
+  typedef enum UtfType
+    {
+      UTF_NONE = 0,
+      UTF_8,
+    };
+  UtfType utf_type;
 
   ~lstream ();
 };
@@ -183,6 +189,13 @@ xstream_pending (lisp x)
 {
   assert (streamp (x));
   return ((lstream *)x)->pending;
+}
+
+inline lstream::UtfType &
+xstream_utf_type (lisp x)
+{
+  assert (streamp (x));
+  return ((lstream *)x)->utf_type;
 }
 
 inline FILE *&
@@ -376,6 +389,7 @@ int listen_stream (lisp);
 int get_stream_column (lisp);
 void flush_stream (lisp);
 long stream_linenum (lisp);
+void check_stream_utf_bom (lisp);
 
 lisp input_stream (lisp);
 lisp output_stream (lisp);

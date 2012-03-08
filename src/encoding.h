@@ -8,6 +8,42 @@ extern u_char escseq_eucgb[];
 extern u_int designatable_any[];
 const Char *cjk_translate_table (int);
 
+
+u_char utf8_chtab[];
+u_char utf8_chmask[];
+
+template<class T> ucs4_t
+getch_utf8_to_ucs4(int first_ch, T& stream)
+{
+  int c = first_ch;
+  u_char nbits = utf8_chtab[c];
+  c &= utf8_chmask[nbits];
+  switch (nbits)
+    {
+    case 7:
+      return (ucs4_t) c;
+
+    case 0:
+    case 6:
+      throw std::exception ();
+
+    default:
+      {
+        ucs4_t code = c;
+        do
+          {
+            c = stream.get ();
+            if (c == xstream::eof)
+              return UCS4_EOF;
+            code = (code << 6) | (c & 0x3f);
+          }
+        while (++nbits < 6);
+		return code;
+      }
+    }
+}
+
+
 class xstream
 {
 public:

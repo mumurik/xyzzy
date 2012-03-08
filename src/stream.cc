@@ -56,6 +56,7 @@ make_stream (stream_type type)
   p->alt_pathname = 0;
   p->open_p = 1;
   p->encoding = lstream::ENCODE_CANON;
+  p->utf_type = lstream::UTF_NONE;
   return p;
 }
 
@@ -1304,6 +1305,52 @@ Fset_stream_encoding (lisp stream, lisp lencoding)
     }
 }
 
+enum
+{
+  UCS4_EOF = 0xffffffffUL
+};
+
+
+#include "encoding.h"
+
+class StreamAdapter
+{
+public:
+  StreamAdapter (lisp s)
+    {
+      stream = s;
+    }
+  inline int get ()
+    {
+      return getc (xfile_stream_input (stream));
+    }
+private:
+  lisp stream;
+};
+
+static const int tofu = 0x81a1;
+
+static int
+ucs4_to_sjis (ucs4_t ucs4)
+{
+  int sjis = 0;
+  if (ucs4 == UCS4_EOF)
+    {
+      sjis = lChar_EOF;
+    }
+  else if (ucs4 < 0x10000)
+    {
+      return wc2cp932(ucs2_t(ucs4));
+    }
+  else
+    {
+      // FIXME : implement better ucs4 (surrogate pair) to sjis (cp932) mapping funciton.
+      return tofu;
+    }
+  return sjis;
+}
+
+
 lChar
 readc_stream (lisp stream)
 {
@@ -1338,6 +1385,28 @@ readc_stream (lisp stream)
               return lChar_EOF;
             if (xfile_stream_encoding (stream) != lstream::ENCODE_BINARY)
               {
+                if (xstream_utf_type (stream) != lstream::UTF_NONE)
+                  {
+                    switch (xstream_utf_type (stream))
+                      {
+                      case lstream::UTF_8:
+                        if (c > 0x7f)
+                          {
+                            try
+                              {
+                                ucs4_t ucs4 = getch_utf8_to_ucs4(c, StreamAdapter(stream));
+                                return ucs4_to_sjis (ucs4);
+                              }
+                            catch(std::exception)
+                              {
+                                return tofu;
+                              }
+                          }
+                        break;
+                      default:
+                        break;
+                      }
+                  }
                 if (SJISP (c))
                   {
                     int c2 = getc (xfile_stream_input (stream));
@@ -2079,4 +2148,41 @@ create_std_streams ()
   xsymbol_value (Vdebug_io) = xsymbol_value (Vterminal_io);
   xsymbol_value (Vtrace_output) = xsymbol_value (Vdebug_io);
   xsymbol_value (Vwstream_stream) = make_wstream_stream ();
+}
+
+void
+check_stream_utf_bom(lisp stream)
+{
+  check_stream (stream);
+  if (xstream_open_p (stream))
+  {
+      switch (xstream_type (stream))
+        {
+        case st_file_io:
+        case st_file_input:
+            {
+                FILE *fp = xfile_stream_input(stream);
+                if(fp)
+                {
+                    long offset = ftell (fp);
+                    if(offset == 0)
+                    {
+                        static const unsigned char utf8_bom[3] = { 0xef, 0xbb, 0xbf };
+                        unsigned char buf[3] = { 0 };
+                        size_t bufLength = fread(buf, sizeof(buf[0]), sizeof(buf)/sizeof(buf[0]), fp);
+                        if( bufLength >= sizeof(utf8_bom) &&
+                            memcmp(buf, utf8_bom, sizeof(utf8_bom)) == 0)
+                        {
+                            xstream_utf_type (stream) = lstream::UTF_8;
+                            offset = (long) sizeof(utf8_bom);
+                        }
+                        fseek (fp, offset, SEEK_SET);
+                    }
+                }
+            }
+            break;
+        default:
+            break;
+        }
+  }
 }
