@@ -12,6 +12,11 @@ const Char *cjk_translate_table (int);
 u_char utf8_chtab[];
 u_char utf8_chmask[];
 
+enum
+{
+  UCS4_EOF = 0xffffffffUL
+};
+
 template<class T> ucs4_t
 getch_utf8_to_ucs4(int first_ch, T& stream)
 {

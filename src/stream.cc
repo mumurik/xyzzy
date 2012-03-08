@@ -1305,11 +1305,6 @@ Fset_stream_encoding (lisp stream, lisp lencoding)
     }
 }
 
-enum
-{
-  UCS4_EOF = 0xffffffffUL
-};
-
 
 #include "encoding.h"
 
