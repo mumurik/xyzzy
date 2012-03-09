@@ -665,25 +665,35 @@ static bool is_parent_process_wow64()
 static void
 init_command_line (int ac)
 {
+  int lastSpecialOption = -1;
+  for (int i = 1; i < __argc; i++)
+    {
+      const char* o = __argv[i];
+      if (_stricmp (o, "-image") == 0 || _stricmp (o, "-config") == 0 || _stricmp (o, "-ini") == 0)
+        {
+          lastSpecialOption = i + 1;
+        }
+      else if (_stricmp (o, "-q") == 0 || _stricmp (o, "-no-init-file") == 0)
+        {
+          lastSpecialOption = i;
+        }
+      else if (_stricmp (o, "-no-wow64-redirection") == 0 || _stricmp (o, "-wow64-redirection") == 0)
+        {
+          lastSpecialOption = -1;
+          break;
+        }
+    }
+
   lisp p = Qnil;
   for (int i = __argc - 1; i >= ac; i--)
-    p = xcons (make_string (__argv[i]), p);
-  {
-    bool haveWow64Option = false;
-    for (int i = __argc - 1; i >= ac; i--)
-      {
-        if (_stricmp (__argv[i], "-wow64-redirection") == 0 || _stricmp (__argv[i], "-no-wow64-redirection") == 0)
-          {
-            haveWow64Option = true;
-            break;
-          }
-      }
-    if (! haveWow64Option)
-      {
-        const char *wow64_mode = is_parent_process_wow64 () ? "-wow64-redirection" : "-no-wow64-redirection";
-        p = xcons (make_string (wow64_mode), p);
-      }
-  }
+    {
+      if(i == lastSpecialOption)
+        {
+          const char *wow64_mode = is_parent_process_wow64 () ? "-wow64-redirection" : "-no-wow64-redirection";
+          p = xcons (make_string (wow64_mode), p);
+        }
+      p = xcons (make_string (__argv[i]), p);
+    }
   xsymbol_value (Vsi_command_line_args) = p;
 }
 
