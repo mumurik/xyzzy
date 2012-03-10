@@ -2599,6 +2599,7 @@ static symbols ed[] =
   DEFVAR2 (*restore-window-position*),
   DEFVAR2 (*buffer-list-sort-ignore-case*),
   DEFVAR2 (*wow64-enable-file-system-redirector*),
+  DEFVAR2 (*parent-process-wow64-p*),
 };
 
 static void

@@ -37,7 +37,7 @@
 
 (defun process-command-line-1 (dir waitobj)
   (let ((mode nil)
-	(wow64-redirection t)
+	(wow64-redirection *parent-process-wow64-p*)
 	(ro nil))
     (catch 'warn
       (while si:*command-line-args*

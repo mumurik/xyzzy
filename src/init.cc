@@ -634,7 +634,8 @@ init_symbol_value ()
   xsymbol_value (Vlast_match_string) = Qnil;
 }
 
-static bool is_parent_process_wow64()
+static bool
+is_parent_process_wow64 ()
 {
   bool ret = false;
   typedef BOOL (WINAPI *ISWOW64PROCESS)(HANDLE, PBOOL);
@@ -668,22 +669,6 @@ init_command_line (int ac)
   lisp p = Qnil;
   for (int i = __argc - 1; i >= ac; i--)
     p = xcons (make_string (__argv[i]), p);
-  {
-    bool haveWow64Option = false;
-    for (int i = __argc - 1; i >= ac; i--)
-      {
-        if (_stricmp (__argv[i], "-wow64-redirection") == 0 || _stricmp (__argv[i], "-no-wow64-redirection") == 0)
-          {
-            haveWow64Option = true;
-            break;
-          }
-      }
-    if (! haveWow64Option)
-      {
-        const char *wow64_mode = is_parent_process_wow64 () ? "-wow64-redirection" : "-no-wow64-redirection";
-        p = xcons (make_string (wow64_mode), p);
-      }
-  }
   xsymbol_value (Vsi_command_line_args) = p;
 }
 
@@ -746,6 +731,7 @@ init_lisp_objects ()
       init_syntax_spec ();
       init_env_symbols (config_path, ini_file);
       xsymbol_value (Vconvert_registry_to_file_p) = boole (reg2ini ());
+      xsymbol_value (Vparent_process_wow64_p) = boole (is_parent_process_wow64 ());
       load_misc_colors ();
       init_command_line (ac);
       syntax_state::init_color_table ();
