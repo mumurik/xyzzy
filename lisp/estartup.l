@@ -101,6 +101,13 @@
 (defun process-command-line ()
   (process-command-line-1 (cwd) nil))
 
+(defun consume-args (args name action)
+  (if (find name args :test #'equal)
+      (progn
+        (funcall action)
+        (remove name args :test #'equal))
+    args))
+
 (defun *xyzzycli-helper (dir args)
   (si:*show-window-foreground)
   (let ((si:*command-line-args*
@@ -112,6 +119,12 @@
 			   (list arg))))
 		 args))
 	waitobj)
+    (setq si:*command-line-args*
+          (consume-args si:*command-line-args* "-no-wow64-parent"
+                        #'(lambda () (setq *parent-process-wow64-p* nil))))
+    (setq si:*command-line-args*
+          (consume-args si:*command-line-args* "-wow64-parent"
+                        #'(lambda () (setq *parent-process-wow64-p* t))))
     (when (equal (car si:*command-line-args*) "-wait")
       (setq waitobj (si:*create-wait-object))
       (pop si:*command-line-args*))
