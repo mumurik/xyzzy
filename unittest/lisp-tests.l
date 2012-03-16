@@ -103,3 +103,23 @@ lisp-indent-hook property"
 	      (and (goto-char (point-max)) #0# #1#))))
   => 4
   => 2)
+
+(deftest tags-setup-buffer-for-XTAGS-using-upper-directory ()
+  "上位ディレクトリにある XTAGS を参照するのに失敗していたのを修正"
+  ;; `ed::tags-setup-buffer` looks at XTAGS file in buffer returned
+  ;; by `ed::find-tags-buffer`. If it contains line like "#USE ../../",
+  ;; it call `ed::find-tags-buffer` again with relative path in that
+  ;; line ("../../" for above example).
+  ;; To see if it finds appropriate part of "#USE ../../" line, directory
+  ;; name given to `ed::find-tags-buffer` is checked.
+  (with-temp-buffer
+   (let (referred-dir)
+     (insert "#USE ../../\n")
+     (with-fake-functions ((ed::find-tags-buffer (&optional dir)
+                             (when dir
+                               (setf referred-dir dir))
+                             (selected-buffer))
+                           (namestring (x) x))
+       (ed::tags-setup-buffer))
+     referred-dir))
+  => "../../")
