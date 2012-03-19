@@ -3,6 +3,7 @@
 #include "filer.h"
 #include "binfo.h"
 #include "buffer-bar.h"
+#include "environ.h"
 #include <map>
 
 fixed_heap Chunk::c_heap (sizeof (Char) * TEXT_SIZE);
@@ -1407,6 +1408,13 @@ Fkill_xyzzy ()
       throw nonlocal_jump ();
     }
   return Qnil;
+}
+
+lisp
+Fprepare_for_kill_xyzzy ()
+{
+  environ::save_geometry ();
+  return Qt;
 }
 
 char *

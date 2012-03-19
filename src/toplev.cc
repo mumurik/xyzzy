@@ -24,6 +24,7 @@ quit_thread_entry (void *p)
 #define HK_BREAK 1
 #define HK_QUIT 2
 
+  WaitForSingleObject (g_app.startupEvent, 60 * 1000);
   RegisterHotKey (0, HK_BREAK, MOD_CONTROL, VK_CANCEL);
   SetTimer (0, 0, 1000, 0);
 

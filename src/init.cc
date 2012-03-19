@@ -47,6 +47,7 @@ Application::Application ()
   int tem;
   initial_stack = &tem;
   in_gc = 0;
+  startupEvent = NULL;
 }
 
 Application::~Application ()
@@ -924,6 +925,7 @@ init_root_app (HINSTANCE hinst, int passed_cmdshow, int &ole_initialized)
   SetErrorMode (SEM_FAILCRITICALERRORS | SEM_NOOPENFILEERRORBOX);
   SetDllDirectory("");
   g_app.in_gc = 0; // whatever.
+  g_app.startupEvent = CreateEvent (0, 0, 0, 0);
   active_app_frame().toplev = 0;
 
 
@@ -1058,6 +1060,7 @@ init_root_app (HINSTANCE hinst, int passed_cmdshow, int &ole_initialized)
     return 0;
 
   try {Dde::initialize ();} catch (Dde::Exception &) {}
+  SetEvent (g_app.startupEvent);
 
   return 1;
 }

@@ -492,7 +492,7 @@ public:
 
   void *initial_stack;
   int in_gc;
-
+  HANDLE startupEvent;
 };
 
 // does not take care parent (ex. ..\).

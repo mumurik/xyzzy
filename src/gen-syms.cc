@@ -1670,6 +1670,7 @@ static symbols ed[] =
   DEFUN3 (count-modified-buffers, 0, 0, 0),
   DEFUN3 (count-buffers, 0, 1, 0),
   DEFCMD3 (kill-xyzzy, 0, 0, 0, ""),
+  DEFUN3 (prepare-for-kill-xyzzy, 0, 0, 0),
   DEFUN3 (lock-file, 0, 1, 0),
   DEFUN3 (unlock-file, 0, 1, 0),
   DEFUN3 (file-locked-p, 0, 1, 0),
