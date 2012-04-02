@@ -1128,6 +1128,15 @@ init_app(HINSTANCE hinst, ApplicationFrame* app1, ApplicationFrame* parent)
 
   app1->modeline_param.init (HFONT (SendMessage (app1->hwnd_sw, WM_GETFONT, 0, 0)));
 
+  if (parent)
+    {
+      Window* window = selected_window (parent);
+      if (window)
+        {
+          window->save_buffer_params ();
+        }
+    }
+
   if (!init_editor_objects (app1, selected_buffer(parent)))
     return 0;
 
