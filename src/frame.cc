@@ -249,6 +249,11 @@ Fmake_frame (lisp opt)
 	if (Qnil == selected_buffer(root)->run_hook_while_success (Vbefore_make_frame_hook))
 		return Qnil;
 
+    Window* window = selected_window (root);
+    if (window)
+      {
+        window->save_buffer_params ();
+      }
 
 	ApplicationFrame* new_app = new ApplicationFrame();
 	ApplicationFrame* next = root->a_next;
