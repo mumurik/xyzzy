@@ -109,34 +109,35 @@
   (when *initial-site-url*
     (update-site *initial-site-url*
 		 (site-create *initial-site-url*)
-		 -1)))
+		 0)))
 
-(defun setup-app-data-from-sites(sites-temp sites)
-  (dolist (site sites-temp)
-    (handler-case
-	(let ((data (load-site-data-file site)))
-	  (when data
-	    (unless (site-src data)
-	      (push (cons "src" (site-src site)) data))
-	    (push data sites)
-	    (dolist (app (site-apps data))
-	      (setq app (app-data-add-site app data))
-	      (push app *app-data*))))
-      (error (c)
-	(ni-msgbox "Error:~%~A" (si:*condition-string c)))))
-  (setq *app-data*
-	(sort *app-data* #'app-newer-p)))
+(defun setup-app-data-from-sites(sites-temp)
+  (let (sites)
+    (dolist (site sites-temp)
+      (handler-case
+	  (let ((data (load-site-data-file site)))
+	    (when data
+	      (unless (site-src data)
+		(push (cons "src" (site-src site)) data))
+	      (push data sites)
+	      (dolist (app (site-apps data))
+		(setq app (app-data-add-site app data))
+		(push app *app-data*))))
+	(error (c)
+	  (ni-msgbox "Error:~%~A" (si:*condition-string c)))))
+    (setq *app-data*
+	  (sort *app-data* #'app-newer-p))
+    (nreverse sites)))
 
 (defun load-site-data ()
-  (let (sites-temp sites)
+  (let (sites-temp)
     (when (file-exist-p *install-site-file*)
       (setq sites-temp
 	    (data-read-from-file *install-site-file*)))
     (setq *app-data* nil)
     (if sites-temp
-	(setup-app-data-from-sites sites-temp sites)
+	(setq *site-data* (setup-app-data-from-sites sites-temp))
       (setup-default-app-data))
-    (setq *site-data* (reverse sites))
     (category-parse)
     (save-site-data)))
 
