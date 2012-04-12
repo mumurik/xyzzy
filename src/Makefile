@@ -2,7 +2,7 @@
 # define VC++ version (4, 6, or 7)
 VCVER=10
 
-.SUFFIXES: .cc .rc .res .d
+.SUFFIXES: .cc .rc .res .d .asm
 
 SRCS=\
 Buffer.cc \
@@ -116,6 +116,7 @@ usertab.cc \
 usertool.cc \
 utils.cc \
 utimer.cc \
+vc-compat.cc \
 vector.cc \
 version.cc \
 vfs.cc \
@@ -124,6 +125,9 @@ winhelp.cc \
 wstream.cc \
 xdde.cc \
 xlist.cc
+
+ASMS=\
+vc-compat-entry.asm
 
 PRIVCTRLDIR=../privctrl
 PRIVCTRLOBJS=\
@@ -142,12 +146,13 @@ CXXOPT=-GF -EHa
 !ENDIF
 
 DEFS=-DSTRICT -DWIN32 -D_WIN32 -D_MT -D__XYZZY__ -DPRIVCTRL_NODLL -DHAVE_DIMM_H -DDEBUG_GC
-!IF "$(VCVER)" == "8" || "$(VCVER)" == "9" || "$(VCVER)" == "10"
+!IF "$(VCVER)" == "8" || "$(VCVER)" == "9" || "$(VCVER)" == "10" || "$(VCVER)" == "11"
 CXX=cl -nologo -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS
 !ELSE
 CXX=cl -nologo
 !ENDIF
 CPP=cl -nologo -E
+ASM=ml -nologo
 LD=link -nologo
 LIBS=kernel32.lib user32.lib gdi32.lib advapi32.lib shell32.lib \
 comctl32.lib imm32.lib setargv.obj comdlg32.lib mpr.lib ole32.lib \
@@ -157,7 +162,7 @@ INC=-I$(PRIVCTRLDIR)
 SPC=""
 SPC=$(SPC:""= )
 
-OBJS=$(SPC)$(SRCS:.cc=.obj)
+OBJS=$(SPC)$(SRCS:.cc=.obj) $(ASMS:.asm=.obj)
 OBJS=$(OBJS:  = )
 
 
@@ -165,6 +170,8 @@ OBJS=$(OBJS:  = )
 !IFNDEF CFG
 CFG=r
 !ENDIF
+
+ASMFLAGS=
 
 !IF "$(CFG)" == "d"
 
@@ -195,6 +202,9 @@ FINAL_TARGET=../$(BUILD)
 
 .d.h:
 	dpp $< $@
+
+.asm{$(OUTDIR)/}.obj:
+	$(ASM) $(ASMFLAGS) -c /Fo$@ $<
 
 all: $(OUTDIR) dpp.exe includes ../xyzzyenv.exe \
      $(FINAL_TARGET) ../xyzzycli.exe libxpi.lib
@@ -241,10 +251,12 @@ realclean: distclean
 	del /F jisx0212-width.h lucida-width.h ucs2tab.h fontrange.h
 
 ../$(BUILD): $(OUTDIR)/$(BUILD)
+	editbin $(OUTDIR)\$(BUILD) /SUBSYSTEM:WINDOWS,5.0
 	copy $(OUTDIR)\$(BUILD) .. > nul
 	copy $(OUTDIR)\xyzzy.map .. > nul
 
 ../xyzzyenv.exe: xyzzyenv.exe
+	editbin xyzzyenv.exe /SUBSYSTEM:WINDOWS,5.0
 	copy xyzzyenv.exe .. > nul
 
 xyzzyenv.exe: xyzzyenv.cc xyzzyenv.res
@@ -252,6 +264,7 @@ xyzzyenv.exe: xyzzyenv.cc xyzzyenv.res
 	   -link -fixed -subsystem:console -entry:process_startup
 
 ../xyzzycli.exe: xyzzycli.exe
+	editbin xyzzycli.exe /SUBSYSTEM:WINDOWS,5.0
 	copy xyzzycli.exe .. > nul
 
 CLIENT_OBJS=xyzzycli.obj
