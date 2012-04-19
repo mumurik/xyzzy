@@ -5,6 +5,9 @@
 #ifndef DECLARE_LARRAY
 # define DECLARE_LARRAY DECLARE_LDATA
 #endif
+#ifndef DECLARE_LDATAX
+#  define DECLARE_LDATAX DECLARE_LDATA
+#endif
 /**/DECLARE_LDATA_BEGIN
 DECLARE_LDATA (lsimple_vector, Tsimple_vector)
 DECLARE_LARRAY (lcomplex_vector, Tcomplex_vector)
@@ -42,7 +45,7 @@ DECLARE_LDATA (lwin32_dde_handle, Twin32_dde_handle)
 DECLARE_LDATA (lchunk, Tchunk)
 DECLARE_LDATA (ldll_module, Tdll_module)
 DECLARE_LDATA (ldll_function, Tdll_function)  // undump‚Ì‚½‚ßdll-module‚æ‚èŒã‚ë
-DECLARE_LDATA (lc_callable, Tc_callable)
+DECLARE_LDATAX(lc_callable, Tc_callable)
 DECLARE_LDATA (loledata, Toledata)
 DECLARE_LDATA (lwait_object, Twait_object)
 DECLARE_LDATA (lchar_encoding, Tchar_encoding)
@@ -51,4 +54,5 @@ DECLARE_LDATA (lenvironment, Tenvironment)
 #undef DECLARE_LDATA_BEGIN
 #undef DECLARE_LDATA_END
 #undef DECLARE_LDATA
+#undef DECLARE_LDATAX
 #undef DECLARE_LARRAY

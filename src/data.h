@@ -33,7 +33,7 @@ public:
   static char *ld_lower_bound;
   static char *ld_upper_bound;
 
-  ldataP ();
+  ldataP (DWORD protect);
 
   ldata_rep *alloc (int);
   void free (ldata_rep *);

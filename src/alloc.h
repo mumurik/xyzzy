@@ -29,8 +29,11 @@ protected:
      0の場合はページごとの管理をせずに割り当て単位をそのまま返す */
   u_int ap_units_per_block;
 
+  /* 割り当てるページのアクセス保護属性 */
+  DWORD ap_protect;
+
 public:
-  alloc_page (u_int size);
+  alloc_page (u_int size, DWORD protect);
   ~alloc_page () {}
 
   void *alloc ();
@@ -52,7 +55,7 @@ protected:
   u_int fh_heap_per_page;
 
 public:
-  fixed_heap (u_int size);
+  fixed_heap (u_int size, DWORD protect = PAGE_READWRITE);
   ~fixed_heap () {}
 
   void *alloc ();

@@ -27,8 +27,8 @@ power_of_2_p (u_int size)
 }
 #endif
 
-alloc_page::alloc_page (u_int size)
-     : ap_rep (0)
+alloc_page::alloc_page (u_int size, DWORD ap_protect_)
+     : ap_rep (0), ap_protect (ap_protect_)
 {
   assert (size);
   assert (power_of_2_p (size));
@@ -65,7 +65,7 @@ alloc_page::alloc ()
           assert (!(pointer_t (base) % ap_block_size));
 
           ap_rep = (alloc_page_rep *)VirtualAlloc (base, ap_unit_size,
-                                                   MEM_COMMIT, PAGE_READWRITE);
+                                                   MEM_COMMIT, ap_protect);
           if (!ap_rep)
             {
               VirtualFree (base, 0, MEM_RELEASE);
@@ -83,7 +83,7 @@ alloc_page::alloc ()
             void *base = (void *)((u_int (ap_rep) & ~(ap_block_size - 1))
                                   + i * ap_unit_size);
             void *p = VirtualAlloc (base, ap_unit_size,
-                                    MEM_COMMIT, PAGE_READWRITE);
+                                    MEM_COMMIT, ap_protect);
             if (!p)
               return 0;
 
@@ -99,10 +99,10 @@ alloc_page::alloc ()
     }
   else
     {
-      void *p = VirtualAlloc (0, ap_unit_size, MEM_RESERVE, PAGE_READWRITE);
+      void *p = VirtualAlloc (0, ap_unit_size, MEM_RESERVE, ap_protect);
       if (!p)
         return 0;
-      void *q = VirtualAlloc (p, ap_unit_size, MEM_COMMIT, PAGE_READWRITE);
+      void *q = VirtualAlloc (p, ap_unit_size, MEM_COMMIT, ap_protect);
       if (!q)
         {
           assert (0);
@@ -163,8 +163,8 @@ alloc_page::free (void *p)
     }
 }
 
-fixed_heap::fixed_heap (u_int size)
-     : fh_ap (size), fh_heap (0), fh_heap_size (size)
+fixed_heap::fixed_heap (u_int size, DWORD protect)
+     : fh_ap (size, protect), fh_heap (0), fh_heap_size (size)
 {
   assert (fh_heap_size);
   assert (power_of_2_p (fh_heap_size));

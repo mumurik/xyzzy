@@ -31,8 +31,8 @@ find_zero_bit (u_long *p, int size)
   return -1;
 }
 
-ldataP::ldataP ()
-     : ld_heap (LDATA_PAGE_SIZE), ld_rep (0), ld_freep (0)
+ldataP::ldataP (DWORD protect)
+     : ld_heap (LDATA_PAGE_SIZE, protect), ld_rep (0), ld_freep (0)
 {
 }
 
@@ -961,7 +961,11 @@ char *ldataP::ld_upper_bound;
 char *ldataP::ld_lower_bound;
 
 #define DECLARE_LDATA(a, b) \
-  ldataP ldata <a, b>::l_ld; \
+  ldataP ldata <a, b>::l_ld(PAGE_READWRITE); \
+  int ldata <a, b>::l_nuses; \
+  int ldata <a, b>::l_nfrees;
+#define DECLARE_LDATAX(a, b) \
+  ldataP ldata <a, b>::l_ld(PAGE_EXECUTE_READWRITE); \
   int ldata <a, b>::l_nuses; \
   int ldata <a, b>::l_nfrees;
 #include "dataP.h"
