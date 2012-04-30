@@ -1109,10 +1109,11 @@ toplevel_wndproc (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
         break;
       /* fall thru... */
     case WM_CLOSE:
-	  if(is_last_app_frame())
-	  {
-        Buffer::kill_xyzzy (1);
-        return 0;
+      {
+        bool b = is_last_app_frame ();
+        Fdelete_frame (app1->lfp, Qt);
+        if (b)
+          return 0;
 	  }
 	  break; /* call def proc */
     case WM_INITMENUPOPUP:

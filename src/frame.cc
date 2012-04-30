@@ -328,7 +328,7 @@ Fdelete_frame (lisp frame, lisp force)
 
   if(!is_last_app_frame())
   {
-	  PostMessage(app->toplev, WM_CLOSE, 0, 0);
+	  DestroyWindow (app->toplev);
 	  return Qnil;
   }
   if(force != Qt)
