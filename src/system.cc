@@ -1,3 +1,4 @@
+#include "ed.h"
 #include "system.h"
 
 lisp

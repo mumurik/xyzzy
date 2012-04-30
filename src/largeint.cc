@@ -1,3 +1,4 @@
+#include "ed.h"
 #include "largeint.h"
 
 #ifdef _M_IX86

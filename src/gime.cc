@@ -1,3 +1,4 @@
+#include "ed.h"
 #include <windows.h>
 #include "gime.h"
 #ifndef DECLSPEC_UUID

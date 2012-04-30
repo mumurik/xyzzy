@@ -1,3 +1,4 @@
+#include "ed.h"
 #include "arc-if.h"
 #include "vfs.h"
 

@@ -1,3 +1,4 @@
+#include "ed.h"
 #include <windows.h>
 #include <stdlib.h>
 #include "cdecl.h"

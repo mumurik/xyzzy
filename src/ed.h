@@ -1,5 +1,6 @@
 #ifndef _ed_h_
 # define _ed_h_
+#ifdef __XYZZY__
 
 # include "sysdep.h"
 # include "xcolor.h"
@@ -716,4 +717,5 @@ public:
 };
 
 
-#endif
+#endif // __XYZZY__
+#endif // _ed_h_

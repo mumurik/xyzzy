@@ -1,3 +1,4 @@
+#include "ed.h"
 #include "cdecl.h"
 #include "version.h"
 #include "version-describe.gen.h"

@@ -25,6 +25,9 @@
     <Filter Include="ヘッダー ファイル\privctrl">
       <UniqueIdentifier>{6c2577ed-1ae6-4589-9819-49eee3f6dd75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\pch">
+      <UniqueIdentifier>{28461187-548a-44b3-b390-d5d4d22d7909}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\chtab.cc">
@@ -407,6 +410,9 @@
     </ClCompile>
     <ClCompile Include="src\unzip.cc">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stdafx.cc">
+      <Filter>ソース ファイル\pch</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

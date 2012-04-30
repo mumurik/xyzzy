@@ -1,3 +1,4 @@
+#include "ed.h"
 #include "lisp.h"
 #include "appid.h"
 #include "version.h"

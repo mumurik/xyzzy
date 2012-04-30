@@ -1,11 +1,9 @@
-#ifdef __XYZZY__
 #include "ed.h"
 #undef CONCAT
 #undef _CONCAT
 #undef __CONCAT
 #undef TOSTR
 #undef _TOSTR
-#endif
 #include "sock.h"
 #include "resolver.h"
 #include "sockimpl.h"

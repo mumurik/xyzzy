@@ -1,6 +1,5 @@
-#ifdef __XYZZY__
-# include "ed.h"
-#else /* not __XYZZY__ */
+#include "ed.h"
+#ifndef __XYZZY__
 # include <windows.h>
 # include <malloc.h>
 # ifndef alloca

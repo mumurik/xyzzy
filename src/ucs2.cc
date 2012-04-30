@@ -1,3 +1,4 @@
+#include "ed.h"
 #include "cdecl.h"
 #include "charset.h"
 #include "ucs2tab.h"
