@@ -18,11 +18,20 @@
 
 (defvar *xhr* nil)
 
+#-multiple-frames
 (defun safe-data-read (file)
   (when (file-exist-p file)
     (when (check-read-time-eval file)
       (ni-error "不正なファイルです: ~%~A" file))
     (data-read-from-file file)))
+
+#+multiple-frames
+(defun safe-data-read (file)
+  (when (file-exist-p file)
+    (handler-case
+	(data-read-from-file file)
+      (reader-error (c)
+	(ni-error "不正なファイルです: ~%~A" file)))))
 
 (defun load-installed-xyzzy-info ()
 "インストールされてるxyzzyに関するsiteを返す。site-*で要素にはアクセスできる。

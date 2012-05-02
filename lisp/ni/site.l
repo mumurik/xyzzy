@@ -98,12 +98,22 @@
 	(file (site-data-file site)))
       (http-get-to-file src file force)))
 
+#-multiple-frames
 (defun load-site-data-file (site)
   (let ((file (site-data-file site)))
     (when (file-exist-p file)
       (when (check-read-time-eval file)
 	(ni-error "不正なファイルです: ~%~A" file))
       (data-read-from-file file))))
+
+#+multiple-frames
+(defun load-site-data-file (site)
+  (let ((file (site-data-file site)))
+    (when (file-exist-p file)
+      (handler-case
+	  (data-read-from-file file)
+	(reader-error (c)
+	  (ni-error "不正なファイルです: ~%~A" file))))))
 
 (defun setup-default-app-data()
   (when *initial-site-url*

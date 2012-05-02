@@ -22,7 +22,8 @@
 		     file
 		     :direction :input
 		     :if-does-not-exist :error)
-      (let (tmp)
+      (let (tmp
+	    #+multiple-frames (*read-eval* nil))
 	(while (setq tmp (read s nil))
 	  (push tmp data))))
     (nreverse data)))

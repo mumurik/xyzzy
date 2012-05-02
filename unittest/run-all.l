@@ -6,6 +6,7 @@
   (load-test-file (merge-pathnames "lisp-tests.l" dir))
   (load-test-file (merge-pathnames "editor-tests.l" dir))
   (load-test-file (merge-pathnames "system-tests.l" dir))
+  (load-test-file (merge-pathnames "netinst-tests.l" dir))
   ;(test-changes)
   (run-all-tests)
   )
