@@ -58,6 +58,27 @@ xyzzySetDllDirectoryA (LPCSTR lpPathName)
 }
 
 
+//
+// GetNativeSystemInfo
+// http://msdn.microsoft.com/en-us/library/windows/desktop/ms724340(v=vs.85).aspx
+//
+extern "C" void __stdcall
+xyzzyGetNativeSystemInfo (LPSYSTEM_INFO lpSystemInfo)
+{
+  static const char szModule[] = "KERNEL32";
+  static const char szProc[] = "GetNativeSystemInfo";
+  typedef void (WINAPI *FUNC)(LPSYSTEM_INFO);
+  static void *procPtr = PROC_PTR_UNINITIALIZED;
+
+  procPtr = getModuleProcAddress (procPtr, szModule, szProc);
+  if (procPtr) {
+    ((FUNC)procPtr)(lpSystemInfo);
+  } else {
+    GetSystemInfo (lpSystemInfo);
+  }
+}
+
+
 #if IS_VC2010_OR_LATER
 //
 // EncodePointer

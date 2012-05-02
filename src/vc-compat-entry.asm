@@ -1,13 +1,17 @@
 .model flat
 .data
 
+VCVER = PLATVER / 10
 
 ;
 ; VC10 + Windows 2000 SP4 Update Rollup 1
 ;
 EXTRN _xyzzySetDllDirectoryA@4:PROC
+EXTRN _xyzzyGetNativeSystemInfo@4:PROC
 EXTERNDEF __imp__SetDllDirectoryA@4:DWORD
+EXTERNDEF __imp__GetNativeSystemInfo@4:DWORD
 __imp__SetDllDirectoryA@4       dd _xyzzySetDllDirectoryA@4
+__imp__GetNativeSystemInfo@4    dd _xyzzyGetNativeSystemInfo@4
 
 
 ifdef VCVER

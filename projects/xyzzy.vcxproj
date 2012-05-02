@@ -451,6 +451,8 @@
   <ItemGroup>
     <MASM Include="..\src\vc-compat-entry.asm">
       <FileType>Document</FileType>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PLATVER=$(PlatformToolsetVersion)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PLATVER=$(PlatformToolsetVersion)</PreprocessorDefinitions>
     </MASM>
   </ItemGroup>
   <PropertyGroup>
