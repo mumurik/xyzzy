@@ -1,5 +1,5 @@
+#include "ed.h"
 #ifdef __XYZZY__
-# include "ed.h"
 # include "except.h"
 # define ERROR_DEAD 0x8fff
 #else

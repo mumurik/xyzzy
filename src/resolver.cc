@@ -1,6 +1,4 @@
-#ifdef __XYZZY__
 #include "ed.h"
-#endif
 #include "resolver.h"
 #include "sockimpl.h"
 

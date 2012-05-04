@@ -1,3 +1,4 @@
+#include "ed.h"
 #include "monitor.h"
 
 HMONITOR

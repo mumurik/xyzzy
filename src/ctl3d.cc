@@ -1,3 +1,4 @@
+#include "ed.h"
 #include <windows.h>
 #include "sysdep.h"
 #include "ctl3d.h"
