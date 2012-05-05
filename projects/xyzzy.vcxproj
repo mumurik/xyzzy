@@ -84,9 +84,12 @@
       <StackReserveSize>0x2000000</StackReserveSize>
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
-      <DataExecutionPrevention>false</DataExecutionPrevention>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
       <AdditionalOptions>/SUBSYSTEM:WINDOWS,5.0 %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>editbin /subsystem:windows,5.0 $(OutDir)$(TargetName)$(TargetExt)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -124,10 +127,13 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <StackReserveSize>0x2000000</StackReserveSize>
-      <DataExecutionPrevention>false</DataExecutionPrevention>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalOptions>/SUBSYSTEM:WINDOWS,5.0 %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>editbin /subsystem:windows,5.0 $(OutDir)$(TargetName)$(TargetExt)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\alloc.cc" />
