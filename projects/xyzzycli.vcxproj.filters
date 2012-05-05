@@ -17,6 +17,9 @@
     <ClCompile Include="..\src\xyzzycli.cc">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\vc-compat.cc">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\xyzzycli.rc">
@@ -33,5 +36,10 @@
     <ClInclude Include="..\src\targetver.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\src\vc-compat-entry.asm">
+      <Filter>ソース ファイル</Filter>
+    </MASM>
   </ItemGroup>
 </Project>
