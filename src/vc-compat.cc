@@ -1,4 +1,4 @@
-#include <windows.h>
+#include "stdafx.h"
 
 //
 //	VC++2010‚Åì‚éƒoƒCƒiƒŠ‚ğ2000‚Å
