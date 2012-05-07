@@ -520,7 +520,8 @@ init_symbol_value_once ()
   xsymbol_value (Qsoftware_type) = make_string (ProgramName);
   xsymbol_value (Qsoftware_version) = make_string (VersionString);
   xsymbol_value (Qsoftware_version_display_string) =
-    make_string (DisplayVersionString);
+    strlen (DisplayVersionString) ?
+      make_string (DisplayVersionString) : make_string (VersionString);
 
   xsymbol_value (Qtemporary_string) = make_string_simple ("", 0);
 
