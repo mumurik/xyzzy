@@ -201,9 +201,20 @@ buffer_info::percent (char *b, char *be) const
   return b;
 }
 
+char *
+buffer_info::frame_index (char *b, char *be, ApplicationFrame* app1) const
+{
+  if (app1)
+    {
+      char tem[64];
+      sprintf_s (tem, 64, "%d", app1->frame_index);
+      b = stpncpy (b, tem, be - b);
+    }
+  return b;
+}
 
 char *
-buffer_info::format (lisp fmt, char *b, char *be) const
+buffer_info::format (lisp fmt, char *b, char *be, ApplicationFrame* app1) const
 {
   if (b_posp)
     *b_posp = 0;
@@ -304,6 +315,10 @@ buffer_info::format (lisp fmt, char *b, char *be) const
 
             case '$':
               b = process_id (b, be);
+              break;
+
+            case 'x':
+              b = frame_index (b, be, app1);
               break;
             }
         }

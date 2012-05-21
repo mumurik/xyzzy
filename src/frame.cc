@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "ed.h"
 #include "mainframe.h"
+#include <algorithm>
 
 
 ApplicationFrame::ApplicationFrame ()
-     : mouse (kbdq)
+     : mouse (kbdq), frame_index (1)
 {
   auto_save_count = 0;
   ime_composition = 0;
@@ -257,11 +258,25 @@ Fmake_frame (lisp opt)
         window->save_buffer_params ();
       }
 
+    u_long new_app_index = 1;
+    {
+      std::vector<u_long> v;
+      for (ApplicationFrame *app1 = root; app1; app1 = app1->a_next)
+        v.push_back (app1->frame_index);
+      if (!v.empty ())
+        {
+          std::sort( v.begin (), v.end () );
+          for (std::vector<u_long>::const_iterator it = v.begin (); it != v.end (); ++it, ++new_app_index)
+            if (*it != new_app_index) break;
+        }
+    }
+
 	ApplicationFrame* new_app = new ApplicationFrame();
 	ApplicationFrame* next = root->a_next;
 	root->a_next = new_app;
 	new_app->a_next = next;
 	g_startup_second_pending_frames.push_back(new_app);
+	new_app->frame_index = new_app_index;
 
 	init_app(hinst, new_app, parent);
 
@@ -337,4 +352,47 @@ Fdelete_frame (lisp frame, lisp force)
 	  return Qnil;
   Fkill_xyzzy();
   return Qnil;
+}
+
+lisp
+Fselect_frame (lisp frame)
+{
+  ApplicationFrame *app = ApplicationFrame::coerce_to_frame (frame);
+  if (app)
+    {
+      SetFocus (app->toplev);
+      return Qt;
+    }
+  else
+    {
+      return Qnil;
+    }
+}
+
+lisp
+Fget_frame_window_handle (lisp frame)
+{
+  ApplicationFrame *app = ApplicationFrame::coerce_to_frame (frame);
+  if (app)
+    {
+      return make_integer (long_to_large_int ((u_long) (app->toplev)));
+    }
+  else
+    {
+      return Qnil;
+    }
+}
+
+lisp
+Fget_frame_index (lisp frame)
+{
+  ApplicationFrame *app = ApplicationFrame::coerce_to_frame (frame);
+  if (app)
+    {
+      return make_integer (long_to_large_int (app->frame_index));
+    }
+  else
+    {
+      return Qnil;
+    }
 }

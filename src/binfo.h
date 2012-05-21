@@ -16,7 +16,7 @@ class buffer_info
 public:
   buffer_info (const Window *wp, const Buffer *bp, char **posp, int *ime, char **percentp)
        : b_wp (wp), b_bufp (bp), b_posp (posp), b_ime (ime), b_percentp(percentp) {}
-  char *format (lisp, char *, char *) const;
+  char *format (lisp, char *, char *, ApplicationFrame* app1 = 0) const;
   char *modified (char *, int) const;
   char *read_only (char *, int) const;
   char *progname (char *b, char *be) const
@@ -36,6 +36,7 @@ public:
   char *host_name (char *, char *, int) const;
   char *process_id (char *, char *) const;
   char *percent(char *, char *) const;
+  char *frame_index(char *, char *, ApplicationFrame* app1) const;
 };
 
 #endif

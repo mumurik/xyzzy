@@ -1457,7 +1457,7 @@ Buffer::refresh_title_bar (ApplicationFrame *app) const
     {
       char buf[512 + 10];
       buffer_info binfo (0, this, 0, 0, 0);
-      *binfo.format (fmt, buf, buf + 512) = 0;
+      *binfo.format (fmt, buf, buf + 512, app) = 0;
       SetWindowText (app->toplev, buf);
     }
   else

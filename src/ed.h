@@ -427,6 +427,7 @@ public:
 
   int default_tab_columns;
   int auto_save_count;
+  u_long frame_index;
 
   int ime_composition;
   int ime_open_mode;
