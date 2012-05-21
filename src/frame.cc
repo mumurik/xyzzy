@@ -39,6 +39,7 @@ ApplicationFrame::~ApplicationFrame ()
 {
 	mframe->cleanup();
 	delete mframe;
+	Buffer::remove_application_frame_cache (this);
 }
 
 

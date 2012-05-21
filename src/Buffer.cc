@@ -1499,6 +1499,20 @@ Buffer::set_frame_title (ApplicationFrame* app, int update)
     }
 }
 
+void
+Buffer::remove_application_frame_cache (ApplicationFrame* app)
+{
+  if (b_title_bar_text_order_map.find (app) != b_title_bar_text_order_map.end ())
+    {
+      b_title_bar_text_order_map.erase (app);
+    }
+
+  if (b_last_title_bar_buffer_map.find (app) != b_last_title_bar_buffer_map.end ())
+    {
+      b_last_title_bar_buffer_map.erase (app);
+    }
+}
+
 lisp
 Frefresh_title_bar ()
 {

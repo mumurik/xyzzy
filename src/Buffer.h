@@ -867,6 +867,7 @@ struct Buffer
 
   void refresh_title_bar (ApplicationFrame*) const;
   void set_frame_title (ApplicationFrame*, int);
+  static void remove_application_frame_cache (ApplicationFrame*);
   char *store_title (lisp, char *, char *) const;
 
   void change_colors (const XCOLORREF *);
