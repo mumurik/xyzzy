@@ -1,25 +1,25 @@
-xyzzy‚Ìƒ}ƒ‹ƒ`ƒtƒŒ[ƒ€”Å
+xyzzyã®ãƒãƒ«ãƒãƒ•ãƒ¬ãƒ¼ãƒ ç‰ˆ
 =======================
 
-‚±‚±‚ÍA[xyzzy‚Ìƒ}ƒ‹ƒ`ƒtƒŒ[ƒ€”Å](https://bitbucket.org/mumurik/xyzzy/wiki/Home)‚ÌŠJ”­—p‚ÌƒŠƒ|ƒWƒgƒŠ’u‚«ê‚Å‚·B
+ã“ã“ã¯ã€[xyzzyã®ãƒãƒ«ãƒãƒ•ãƒ¬ãƒ¼ãƒ ç‰ˆ](https://bitbucket.org/mumurik/xyzzy/wiki/Home)ã®é–‹ç™ºç”¨ã®ãƒªãƒã‚¸ãƒˆãƒªç½®ãå ´ã§ã™ã€‚
 
-ƒIƒŠƒWƒiƒ‹”Å‚ÌÅI³®ƒŠƒŠ[ƒX‚Å‚ ‚é[version 0.2.2.235 ‚ÌƒR[ƒh](http://www.jsdlab.co.jp/~kamei/%28T%5eT%29/src-0.2.2.235.tar.bz2)‚ğ‚à‚Æ‚ÉA
-[ƒ}ƒ‹ƒ`ƒtƒŒ[ƒ€‰»‚ğ‚Í‚¶‚ß‚Æ‚µ‚½A—Lu‚É‚æ‚é‚³‚Ü‚´‚Ü‚È‰ü—Ç](https://bitbucket.org/mumurik/xyzzy/wiki/%E6%9B%B4%E6%96%B0%E5%B1%A5%E6%AD%B4)‚ğæ‚è“ü‚ê‚Ä‚¢‚Ü‚·B
-
-
-## g‚Á‚Ä‚İ‚æ‚¤
-
- - [ƒ_ƒEƒ“ƒ[ƒh‚µ‚Äg‚Á‚Ä‚İ‚é](https://bitbucket.org/mumurik/xyzzy/wiki/Home)
- - ƒoƒO‚ğŒ©‚Â‚¯‚½‚çA[¥”ñƒCƒVƒ…[ƒgƒ‰ƒbƒJ[‚Å‹³‚¦‚Ä‚­‚¾‚³‚¢](https://bitbucket.org/mumurik/xyzzy/issues)
+ã‚ªãƒªã‚¸ãƒŠãƒ«ç‰ˆã®æœ€çµ‚æ­£å¼ãƒªãƒªãƒ¼ã‚¹ã§ã‚ã‚‹[version 0.2.2.235 ã®ã‚³ãƒ¼ãƒ‰](http://www.jsdlab.co.jp/~kamei/%28T%5eT%29/src-0.2.2.235.tar.bz2)ã‚’ã‚‚ã¨ã«ã€
+[ãƒãƒ«ãƒãƒ•ãƒ¬ãƒ¼ãƒ åŒ–ã‚’ã¯ã˜ã‚ã¨ã—ãŸã€æœ‰å¿—ã«ã‚ˆã‚‹ã•ã¾ã–ã¾ãªæ”¹è‰¯](https://bitbucket.org/mumurik/xyzzy/wiki/%E6%9B%B4%E6%96%B0%E5%B1%A5%E6%AD%B4)ã‚’å–ã‚Šå…¥ã‚Œã¦ã„ã¾ã™ã€‚
 
 
-## ƒ\[ƒXƒR[ƒh‚ğƒrƒ‹ƒhA‰ü—Ç‚µ‚ÄA’ñˆÄ‚µ‚½‚¢
+## ä½¿ã£ã¦ã¿ã‚ˆã†
 
-[src/README.md](https://github.com/mumurik/xyzzy/blob/master/src/README.md) ‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+ - [ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ã¦ä½¿ã£ã¦ã¿ã‚‹](https://bitbucket.org/mumurik/xyzzy/wiki/Home)
+ - ãƒã‚°ã‚’è¦‹ã¤ã‘ãŸã‚‰ã€[æ˜¯éã‚¤ã‚·ãƒ¥ãƒ¼ãƒˆãƒ©ãƒƒã‚«ãƒ¼ã§æ•™ãˆã¦ãã ã•ã„](https://bitbucket.org/mumurik/xyzzy/issues)
 
- - ƒ\[ƒXƒR[ƒh‚Ìæ“¾•û–@
- - ƒrƒ‹ƒh‚Ì•û–@
- - GitHub ‚ÌŠÈ’P‚Èg‚¢•û
- - ‰ü—Ç‚Ì’ñˆÄ‚Ì•û–@
 
-‚È‚Ç‚ª‘‚©‚ê‚Ä‚¢‚Ü‚·B
+## ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚’ãƒ“ãƒ«ãƒ‰ã€æ”¹è‰¯ã—ã¦ã€ææ¡ˆã—ãŸã„
+
+[src/README.md](https://github.com/mumurik/xyzzy/blob/master/src/README.md) ã‚’å‚ç…§ã—ã¦ãã ã•ã„ã€‚
+
+ - ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®å–å¾—æ–¹æ³•
+ - ãƒ“ãƒ«ãƒ‰ã®æ–¹æ³•
+ - GitHub ã®ç°¡å˜ãªä½¿ã„æ–¹
+ - æ”¹è‰¯ã®ææ¡ˆã®æ–¹æ³•
+
+ãªã©ãŒæ›¸ã‹ã‚Œã¦ã„ã¾ã™ã€‚
