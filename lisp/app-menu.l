@@ -472,9 +472,6 @@
 	   (:item :tag-command "バックタグジャンプ(&B)"
 	    'back-tag-jump
 	    #'(lambda () (if (null *global-mark-list*) :disable)))
-	   (:sep :above-check-update)
-	   (:item :tag-command "アップデートの確認"
-	    'check-update)
 	   (:sep :|above-(>_<)|)
 	   (:popup :|(>_<)-popup| "(>&_<)"
 	    (:item :tag-command "ニフティのログを読む(&N)"
@@ -498,6 +495,9 @@
 	    'describe-bindings)
 	   (:item :tag-command "最近入力したキー(&L)"
 	    'view-lossage)
+	   (:sep :above-check-update)
+	   (:item :tag-command "アップデートの確認"
+	    'check-update)
 	   (:sep :above-about)
 	   (:item :tag-command "について(&A)..."
 	    'about-dialog))))
