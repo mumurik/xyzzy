@@ -1765,7 +1765,8 @@ main_loop ()
 	  }
 	  catch(std::exception)
 	  {
-		  delete_floating_app_frame();
+          call_all_startup_frame_second();
+          delete_floating_app_frame();
 		  continue;
 	  }
       if (c == lChar_EOF)
@@ -1781,6 +1782,7 @@ main_loop ()
 		  }
 		  catch(std::exception)
 		  {
+			  call_all_startup_frame_second();
 			  delete_floating_app_frame();
 	          c = active_app_frame().kbdq.peek (toplev_accept_mouse_move_p ());
 			  continue;

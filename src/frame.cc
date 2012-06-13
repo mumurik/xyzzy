@@ -205,11 +205,22 @@ void delete_floating_app_frame()
 	g_floating_frames.clear();
 }
 
+#include <algorithm>
+
+static bool already_deleted(ApplicationFrame *app1)
+{
+	return g_floating_frames.end() != find(g_floating_frames.begin(), g_floating_frames.end(), app1);
+}
+
 void call_all_startup_frame_second()
 {
 	for(std::vector<ApplicationFrame*>::iterator itr = g_startup_second_pending_frames.begin(); itr != g_startup_second_pending_frames.end(); itr++)
 	{
 		ApplicationFrame *app1 = *itr;
+
+		if(already_deleted(app1))
+			continue;
+
 		change_root_frame(app1);
 		if (xsymbol_function (Vstartup_frame_second) == Qunbound
 			|| xsymbol_function (Vstartup_frame_second) == Qnil)
