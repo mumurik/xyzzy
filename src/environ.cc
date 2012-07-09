@@ -877,7 +877,7 @@ environ::save_geometry ()
               w.rcNormalPosition.bottom = r.bottom;
 
               MONITORINFO info;
-              if (monitor.get_monitorinfo_from_window (app.toplev, &info))
+              if (monitor.get_monitorinfo_from_window (active_app_frame().toplev, &info))
                 {
                   int taskbar_width = info.rcWork.left - info.rcMonitor.left;
                   int taskbar_height = info.rcWork.top - info.rcMonitor.top;
