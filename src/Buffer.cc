@@ -1494,8 +1494,9 @@ Buffer::refresh_title_bar (ApplicationFrame *app) const
 void
 Buffer::set_frame_title (ApplicationFrame* app, int update)
 {
+  Window *wp = selected_window (app);
   int order = xsymbol_value (Vtitle_bar_text_order) != Qnil;
-  if (!internal_buffer_p ()
+  if (!wp->minibuffer_window_p ()
       && (update
           || b_buffer_name_modified
           || b_last_title_bar_buffer_map[app] != this
@@ -1527,8 +1528,9 @@ Frefresh_title_bar ()
 {
   for(ApplicationFrame *app = first_app_frame(); app; app = app->a_next)
   {
+	Window *wp = selected_window (app);
 	Buffer *bp = selected_buffer (app);
-	if (!bp->internal_buffer_p ())
+	if (!wp->minibuffer_window_p ())
 		bp->refresh_title_bar (app);
   }
   return Qt;

@@ -301,7 +301,7 @@ pathname_match_p (const char *pat, const char *str)
 
 static lisp
 directory (char *path, const char *pat, char *name, file_masks &masks, int flags,
-           int depth, int max_depth, long &count, lisp callback, lisp result)
+           int depth, int max_depth, long &count, lisp callback, lisp test, lisp result)
 {
   QUIT;
 
@@ -330,6 +330,7 @@ directory (char *path, const char *pat, char *name, file_masks &masks, int flags
           if (*fd.cFileName == '~' && !fd.cFileName[1])
             continue;
 #endif
+          bool test_called = false;
           if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             {
               if (*fd.cFileName == '.'
@@ -348,8 +349,17 @@ directory (char *path, const char *pat, char *name, file_masks &masks, int flags
                   if (!(flags & DF_ABSOLUTE))
                     strcpy (stpcpy (ne, fd.cFileName), "/");
                   strcpy (stpcpy (pe, fd.cFileName), "/");
+                  if (test != Qnil)
+                    {
+                      lisp lpath = make_string ((flags & DF_ABSOLUTE) ? path : name);
+                      if (flags & DF_FILE_INFO)
+                        lpath = xcons (lpath, make_file_info (fd));
+                      test_called = true;
+                      if (funcall_1 (test, lpath) == Qnil)
+                        continue;
+                    }
                   result = directory (path, "", name, masks, flags,
-                                      depth + 1, max_depth, count, callback, result);
+                                      depth + 1, max_depth, count, callback, test, result);
                   if (flags & DF_COUNT && count <= 0)
                     break;
                 }
@@ -386,6 +396,12 @@ directory (char *path, const char *pat, char *name, file_masks &masks, int flags
           lisp lpath = make_string ((flags & DF_ABSOLUTE) ? path : name);
           if (flags & DF_FILE_INFO)
             lpath = xcons (lpath, make_file_info (fd));
+          if (test != Qnil && !test_called)
+            {
+              if (funcall_1 (test, lpath) == Qnil)
+                continue;
+            }
+
           if (callback != Qnil)
             {
               lisp arg = xcons (lpath, Qnil);
@@ -470,8 +486,9 @@ Fdirectory (lisp dirname, lisp keys)
   if (find_keyword (Kfile_info, keys, Qnil) != Qnil)
     flags |= DF_FILE_INFO;
   lisp callback = find_keyword (Kcallback, keys, Qnil);
+  lisp test = find_keyword (Ktest, keys, Qnil);
   return Fnreverse (directory (path, pat, name, masks, flags,
-                               0, max_depth, count, callback, Qnil));
+                               0, max_depth, count, callback, test, Qnil));
 }
 
 lisp

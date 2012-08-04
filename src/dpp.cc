@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "gen-stdafx.h"
 
 static FILE *fi, *fo;
 #define MAXARGS 2
@@ -541,8 +542,8 @@ process_proc ()
   return 1;
 }
 
-int
-main (int argc, char **argv)
+void
+dpp (int argc, char **argv)
 {
   if (argc != 3)
     {
@@ -567,5 +568,5 @@ main (int argc, char **argv)
     ;
   fclose (fo);
   fclose (fi);
-  return 0;
+  exit (0);
 }
