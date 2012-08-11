@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{009D9799-3749-4F66-BBC4-83976E5EA7A7}</ProjectGuid>
+    <ProjectGuid>{A053A4AF-7D94-4DBB-918B-C8438FB84203}</ProjectGuid>
     <RootNamespace>genmsg</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>gen-src2</ProjectName>

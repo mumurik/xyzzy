@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A2C59236-6E41-487F-AB4A-E988D1C627D8}</ProjectGuid>
+    <ProjectGuid>{46471C94-B179-41B5-BF90-38DE40186F69}</ProjectGuid>
     <RootNamespace>dpp</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>gen-src1</ProjectName>

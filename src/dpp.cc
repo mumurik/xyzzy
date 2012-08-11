@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "gen-stdafx.h"
 
 static FILE *fi, *fo;

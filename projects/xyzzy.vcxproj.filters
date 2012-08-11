@@ -425,6 +425,7 @@
     </ClCompile>
     <ClCompile Include="..\src\stdafx.cc">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\dsfmt\dSFMT.cc">
       <Filter>ソース ファイル\dsfmt</Filter>
     </ClCompile>
